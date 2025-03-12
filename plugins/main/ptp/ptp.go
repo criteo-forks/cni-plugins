@@ -254,7 +254,7 @@ func setupHostVeth(netns string, vethName string, result *current.Result) error 
 	if netns != "" {
 		destNetns, err = ns.GetNS(fmt.Sprintf("/var/run/netns/%s", netns))
 		if err != nil {
-			return fmt.Errorf("failed to get netns %s", netns)
+			return fmt.Errorf("failed to get netns %s: %v", netns, err)
 		}
 		defer destNetns.Close()
 		if err := netlink.LinkSetNsFd(veth, int(destNetns.Fd())); err != nil {
@@ -269,7 +269,7 @@ func setupHostVeth(netns string, vethName string, result *current.Result) error 
 	} else {
 		destNetns, err = ns.GetCurrentNS()
 		if err != nil {
-			return fmt.Errorf("failed to get current netns")
+			return fmt.Errorf("failed to get current netns: %v", err)
 		}
 		defer destNetns.Close()
 	}
